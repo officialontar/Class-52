@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="relative h-[600px] flex items-center justify-center text-center mt-10">
+
+<!-- Background Image -->
+<div class="absolute inset-0">
+<img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d"
+class="w-full h-full object-cover">
+</div>
+
+<!-- Dark Overlay -->
+<div class="absolute inset-0 bg-black/60"></div>
+
+<!-- Content -->
+<div class="relative z-10 text-white max-w-2xl px-4">
+
+<h1 class="text-5xl font-bold mb-4">
+Welcome to My Website
+</h1>
+
+<p class="text-lg mb-6 text-gray-200">
+Build your future with modern web technology
+</p>
+
+<a href="{% url 'register' %}"
+class="bg-yellow-400 text-black px-6 py-3 rounded-md font-semibold hover:bg-yellow-300 transition">
+Get Started
+</a>
+
+</div>
+
+</section>
+
+
+
+<!-- FEATURES SECTION -->
+<section class="py-20 bg-gray-100">
+
+<div class="max-w-7xl mx-auto px-6">
+
+<div class="text-center mb-12">
+
+<h2 class="text-3xl font-bold text-gray-800">
+Our Features
+</h2>
+
+<p class="text-gray-500 mt-2">
+We build modern and scalable web applications
+</p>
+
+</div>
+
+
+<div class="grid md:grid-cols-3 gap-8">
+
+<div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+
+<h3 class="text-xl font-semibold mb-2">
+Fast Development
+</h3>
+
+<p class="text-gray-600">
+Build modern websites quickly using Django and Tailwind CSS.
+</p>
+
+</div>
+
+
+<div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+
+<h3 class="text-xl font-semibold mb-2">
+Secure System
+</h3>
+
+<p class="text-gray-600">
+Authentication and role based access control included.
+</p>
+
+</div>
+
+
+<div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+
+<h3 class="text-xl font-semibold mb-2">
+Responsive Design
+</h3>
+
+<p class="text-gray-600">
+Your website will look great on mobile, tablet and desktop.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ABOUT SECTION -->
+<section class="py-20">
+
+<div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+
+<img
+src="https://images.unsplash.com/photo-1551434678-e076c223a692"
+class="rounded-lg shadow-lg">
+
+<div>
+
+<h2 class="text-3xl font-bold mb-4">
+Build Powerful Web Applications
+</h2>
+
+<p class="text-gray-600 mb-4">
+This project demonstrates a modern Django authentication system with
+Tailwind CSS UI. You can easily extend it into a full SaaS platform.
+</p>
+
+<p class="text-gray-600">
+Add features like dashboard, role management, API integration and more.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,158 @@
+import re
+
+from django.db.models import Q
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from .models import CustomUser, RecruiterProfile, JobSeekerProfile
+
+
+
+
+# Create your views here.
+def home(request):
+    return render(request, 'accounts/index.html')
+
+
+# Registration logic here
+def register(request):
+
+    if request.user.is_authenticated:
+        messages.warning(request, "You are already logged in.")
+        return redirect('home')
+    
+
+    if request.method == 'POST':
+        fname = request.POST.get('first_name')
+        lname = request.POST.get('last_name')
+        user_name = request.POST.get('user_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        profile_pic = request.FILES.get('profile_pic')
+        role = request.POST.get('role')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return redirect('register')
+
+        if not re.match(pattern, password):
+            messages.error(request, "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
+            return redirect('register')
+        if CustomUser.objects.filter(username = user_name).exists():
+            messages.error(request, "Username already exists.")
+            return redirect('register')
+        
+        if CustomUser.objects.filter(email = email).exists():
+            messages.error(request, "Email already exists.")
+            return redirect('register')
+        
+        if CustomUser.objects.filter(phone = phone).exists():
+            messages.error(request, "Phone number already exists.")
+            return redirect('register')
+        
+        user = CustomUser.objects.create_user(
+            first_name = fname,
+            last_name = lname,
+            username = user_name,
+            email = email,
+            phone = phone,
+            profile_pic = profile_pic,
+            role = role,
+            password = password
+        )
+        
+        user.save()
+
+        if role == 'recruiter':
+            RecruiterProfile.objects.create(user = user)
+
+        elif role == 'job_seeker':
+            JobSeekerProfile.objects.create(user = user)
+
+
+        messages.success(request, "✅ Registration successful. You can now login.")
+        return redirect('login')
+    
+
+    return render(request, 'accounts/register.html')
+
+
+
+# Login logic here
+def login_view(request):
+
+    if request.user.is_authenticated:
+        messages.warning(request, "You are already logged in.")
+        return redirect('profile')
+
+    if request.method == 'POST':
+
+        # এখানে form থেকে username / email / phone যেটা user লিখবে সেটা নেওয়া হচ্ছে
+        user_input = request.POST.get('user_name_email_phone')
+
+        # এখানে password নেওয়া হচ্ছে
+        password = request.POST.get('password')
+
+        try:
+
+            # এখানে database এ user খোঁজা হচ্ছে
+            user_obj = CustomUser.objects.get(
+
+                Q(username=user_input) |   # এখানে USERNAME check করবে
+
+                Q(email=user_input) |      # এখানে EMAIL check করবে
+
+                Q(phone=user_input)        # এখানে PHONE NUMBER check করবে
+
+            )
+
+            # এখানে authenticate করা হচ্ছে (login verify)
+            user = authenticate(
+                request,
+                username=user_obj.username,  # authenticate সবসময় username দিয়ে হয়
+                password=password
+            )
+
+            if user is not None:
+
+                # login সফল হলে user session start হবে
+                login(request, user)
+
+                # success message
+                messages.success(request, "Login Successful")
+
+                # login হলে profile page এ redirect
+                return redirect('profile')
+
+            else:
+
+                # password ভুল হলে এই message
+                messages.error(request, "Invalid password")
+
+        except CustomUser.DoesNotExist:
+
+            # username / email / phone কোনটাই না মিললে এই message
+            messages.error(request, "User not found")
+
+    # GET request হলে login page show করবে
+    return render(request, 'accounts/login.html')
+
+
+
+
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "You have been logged out.")
+    return redirect('login')
+
+
+@login_required
+def profile_page(request):
+    
+    return render(request, 'accounts/profile.html')

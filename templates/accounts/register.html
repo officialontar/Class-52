@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto my-16 bg-white shadow-lg rounded-lg p-10">
+
+<h2 class="text-3xl font-bold text-center mb-8">
+Create Your Account
+</h2>
+
+<form method="POST" enctype="multipart/form-data" class="space-y-6">
+
+{% csrf_token %}
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div>
+<label class="font-semibold">First Name <span class="text-red-500">*</span></label>
+<input type="text" name="first_name" required
+placeholder="Enter your first name"
+class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+</div>
+
+<div>
+<label class="font-semibold">Last Name <span class="text-red-500">*</span></label>
+<input type="text" name="last_name" required
+placeholder="Enter your last name"
+class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+</div>
+
+</div>
+
+
+<div>
+<label class="font-semibold">Username <span class="text-red-500">*</span></label>
+<input type="text" name="user_name" required
+placeholder="Enter your username"
+class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+</div>
+
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div>
+<label class="font-semibold">Email <span class="text-red-500">*</span></label>
+<input type="email" name="email" required
+placeholder="Enter your valid email"
+class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+</div>
+
+<div>
+<label class="font-semibold">Phone Number <span class="text-red-500">*</span></label>
+<input type="text" name="phone" required
+placeholder="Enter your valid phone number"
+class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+</div>
+
+</div>
+
+
+<div>
+<label class="font-semibold">Profile Picture <span class="text-red-500">*</span></label>
+<input type="file" name="profile_pic" required
+class="w-full border rounded-lg px-4 py-2">
+</div>
+
+
+<div>
+<label class="font-semibold">Role <span class="text-red-500">*</span></label>
+
+<select name="role" required
+class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+
+<option value="">Select your role</option>
+<option value="job_seeker">Job Seeker</option>
+<option value="recruiter">Recruiter</option>
+
+</select>
+</div>
+
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div>
+<label class="font-semibold">Password <span class="text-red-500">*</span></label>
+<input type="password" name="password" required
+placeholder="Enter your password"
+class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+</div>
+
+<div>
+<label class="font-semibold">Confirm Password <span class="text-red-500">*</span></label>
+<input type="password" name="confirm_password" required
+placeholder="Confirm your password"
+class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+</div>
+
+</div>
+
+
+<button type="submit"
+class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold 
+hover:bg-green-600 hover:shadow-[0_0_20px_rgba(34,197,94,0.8)] 
+transition duration-300">
+
+Register
+
+</button>
+
+
+<div class="text-center mt-4">
+
+<p class="text-gray-600">
+I have already account?
+<a href="{% url 'login' %}" class="text-blue-600 font-semibold hover:shadow-[0_0_20px_rgba(34,197,94,0.8)] transition duration-500">
+Login
+</a>
+</p>
+
+</div>
+
+</form>
+
+</div>
+
+{% endblock %}
