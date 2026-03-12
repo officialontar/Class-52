@@ -5,61 +5,81 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>
-
 {% block title %}
     My Website
 {% endblock %}
-
 </title>
 
+<!-- TAILWIND CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
+
+<!-- SWEETALERT -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
 
-<!-- NAVBAR -->
+<!-- ===================== NAVBAR ===================== -->
 {% include 'includes/header.html' %}
 
 
+<!-- ===================== SWEET ALERT MESSAGES ===================== -->
+{% if messages %}
+{% for message in messages %}
+
+<script>
+
+function typeWriterEffect(text, elementId, speed = 40) {
+    let i = 0;
+    const element = document.getElementById(elementId);
+    element.innerHTML = "";
+
+    function typing() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typing, speed);
+        }
+    }
+
+    typing();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+Swal.fire({
+    icon: "{{ message.tags }}",
+    html: "<h2 id='typingText' style='font-size:22px;font-weight:600;text-align:center'></h2>",
+    showConfirmButton: true,
+    confirmButtonText: "OK",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    backdrop: true,
+    didOpen: () => {
+        typeWriterEffect("{{ message|escapejs }}", "typingText", 45);
+    }
+});
+
+});
+
+</script>
+
+{% endfor %}
+{% endif %}
+<!-- ===================== END SWEET ALERT ===================== -->
+
+
+<!-- ===================== MAIN CONTENT ===================== -->
 {% block content %}
 
-
 {% endblock %}
+<!-- ===================== END MAIN CONTENT ===================== -->
 
 
-<!-- FOOTER -->
+<!-- ===================== FOOTER ===================== -->
 {% include 'includes/footer.html' %}
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-{% if messages %}
-    {% for message in messages %}
-        <script>
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% elif message.tags == "warning" %}warning{% elif message.tags == "info" %}info{% else %}info{% endif %}',
-                title: '{{ message|escapejs }}',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                background: '#ffffff',
-                color: '#1f2937',
-                iconColor: '{% if message.tags == "success" %}#22c55e{% elif message.tags == "error" %}#ef4444{% elif message.tags == "warning" %}#f59e0b{% elif message.tags == "info" %}#3b82f6{% else %}#3b82f6{% endif %}',
-                customClass: {
-                    popup: 'rounded-xl shadow-xl'
-                },
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-        </script>
-    {% endfor %}
-{% endif %}
+<!-- ===================== END FOOTER ===================== -->
 
 
 </body>

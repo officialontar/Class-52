@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create New Job
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-10">
+    <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
+        
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-8 text-center">
+            <h1 class="text-3xl font-bold text-white">Create New Job</h1>
+            <p class="text-blue-100 mt-2 text-lg">Fill up all required job information below</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="p-8 space-y-6">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Job Title <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="job_title" required
+                    placeholder="Enter job title"
+                    class="input-clean w-full rounded-xl border border-gray-300 px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Company Name <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="company_name" required
+                    placeholder="Enter company name"
+                    class="input-clean w-full rounded-xl border border-gray-300 px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Company Logo <span class="text-red-500">*</span>
+                    </label>
+                    <input type="file" name="company_logo" required
+                    class="w-full rounded-xl border border-gray-300 px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Vacancies <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="vacancies" required
+                    placeholder="Enter number of vacancies"
+                    class="input-clean w-full rounded-xl border border-gray-300 px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Salary <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="salary" required
+                    placeholder="Enter salary amount"
+                    class="w-full rounded-xl border border-gray-300 px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Job Type <span class="text-red-500">*</span>
+                    </label>
+                    <select name="job_type" required
+                    class="w-full rounded-xl border border-gray-300 px-4 py-3">
+                        <option value="">Select job type</option>
+                        <option value="part_time">Part Time</option>
+                        <option value="full_time">Full Time</option>
+                        <option value="remote_job">Remote Job</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Opening Date <span class="text-red-500">*</span>
+                    </label>
+                    <input type="date" name="opening_date" required
+                    class="w-full rounded-xl border border-gray-300 px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Deadline <span class="text-red-500">*</span>
+                    </label>
+                    <input type="date" name="deadline" required
+                    class="w-full rounded-xl border border-gray-300 px-4 py-3">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Location <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="location" required
+                    placeholder="Enter job location"
+                    class="w-full rounded-xl border border-gray-300 px-4 py-3">
+                </div>
+
+                <!-- EDUCATION -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Education <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="education" rows="6"
+                    placeholder="Write normal text first...
+
+Example:
+We are looking for candidates with strong academic background.
+
+• Bachelor’s degree in CSE
+• MSc preferred
+• Relevant academic background required"
+                    class="bullet-textarea w-full rounded-xl border border-gray-300 px-4 py-3"></textarea>
+                </div>
+
+                <!-- RESPONSIBILITIES -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Responsibilities <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="responsibilities" rows="6"
+                    placeholder="Write normal description first...
+
+• Develop and maintain application features
+• Collaborate with team members
+• Write clean code
+• Fix bugs and improve performance"
+                    class="bullet-textarea w-full rounded-xl border border-gray-300 px-4 py-3"></textarea>
+                </div>
+
+                <!-- SKILLS -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Skills <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="skills" rows="6"
+                    placeholder="Write general skill description first...
+
+• Python
+• Django
+• HTML
+• CSS
+• JavaScript
+• REST API"
+                    class="bullet-textarea w-full rounded-xl border border-gray-300 px-4 py-3"></textarea>
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Description <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="description" rows="7"
+                    placeholder="Write full job description first...
+
+Example:
+Our company is looking for passionate developers who love building scalable systems.
+
+• Competitive salary
+• Friendly work environment
+• Growth opportunity"
+                    class="bullet-textarea w-full rounded-xl border border-gray-300 px-4 py-3"></textarea>
+                </div>
+
+            </div>
+
+            <div class="flex justify-between pt-6">
+
+                <a href="javascript:history.back()"
+                class="back-btn text-white font-semibold px-6 py-3 rounded-xl">
+                    ← Back
+                </a>
+
+                <button type="submit"
+                class="publish-btn text-white font-semibold px-8 py-3 rounded-xl">
+                    Publish Job
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<style>
+
+.input-clean:focus{
+outline:none;
+box-shadow:none;
+border-color:#d1d5db;
+}
+
+.publish-btn{
+background:#2563eb;
+transition:0.3s;
+}
+
+.publish-btn:hover{
+background:#22c55e;
+box-shadow:0 0 20px #22c55e,0 0 40px #22c55e,0 0 60px #22c55e;
+transform:scale(1.03);
+}
+
+.back-btn{
+background:#64748b;
+transition:0.3s;
+}
+
+.back-btn:hover{
+box-shadow:0 0 20px #22c55e,0 0 40px #22c55e,0 0 60px #22c55e;
+}
+
+</style>
+
+<script>
+
+document.querySelectorAll('.bullet-textarea').forEach(textarea=>{
+
+textarea.addEventListener('keydown',function(e){
+
+if(e.key==="Enter" && e.ctrlKey){
+
+e.preventDefault();
+
+let start=this.selectionStart;
+let text=this.value;
+
+this.value=text.substring(0,start)+"\n• "+text.substring(start);
+this.selectionStart=this.selectionEnd=start+3;
+
+}
+
+});
+
+});
+
+</script>
+
+{% endblock %}

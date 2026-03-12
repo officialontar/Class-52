@@ -1,10 +1,8 @@
-from calendar import c
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 
-# Create your models here.
 class CustomUser(AbstractUser):
 
     ROLE_CHOICES = (
@@ -13,8 +11,8 @@ class CustomUser(AbstractUser):
     )
 
     phone = models.CharField(max_length=15, unique=True)
-    profile_pic = models.ImageField(upload_to = 'profile/', null = True, blank = True)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES,)
+    profile_pic = models.ImageField(upload_to='profile/', null=True, blank=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
 
 
 class RecruiterProfile(models.Model):
@@ -25,6 +23,7 @@ class RecruiterProfile(models.Model):
     def __str__(self):
         return f"RecruiterProfile: {self.user.username}"
 
+
 class JobSeekerProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     skills = models.TextField(blank=True, null=True)
@@ -33,3 +32,17 @@ class JobSeekerProfile(models.Model):
 
     def __str__(self):
         return f"JobSeekerProfile: {self.user.username}"
+
+
+class Application(models.Model):
+
+    job = models.ForeignKey(
+        "jobs.Job",
+        related_name="applications",
+        on_delete=models.CASCADE
+    )
+
+    applicant = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE
+    )

@@ -1,116 +1,351 @@
 {% extends "base.html" %}
 
 {% block title %}
-Profile
+{{ request.user.first_name }} {{ request.user.last_name }}
 {% endblock %}
 
 {% block content %}
 
-<div class="max-w-5xl mx-auto mt-16 mb-16 bg-white shadow-xl rounded-xl overflow-hidden">
+{% if request.user.is_authenticated %}
 
-<!-- COVER -->
-<div class="bg-blue-600 h-40"></div>
+<div class="max-w-6xl mx-auto mt-10">
 
+{% if request.user.role == "recruiter" %}
 
-<!-- PROFILE IMAGE -->
-<div class="flex justify-center -mt-16">
+<!-- ================= RECRUITER PROFILE ================= -->
 
-{% if request.user.profile_pic %}
+<div class="bg-white shadow-xl rounded-xl p-8 my-12">
+
+<!-- HEADER -->
+<div class="flex items-center justify-between">
+
+<div class="flex items-center gap-6">
+
 <img src="{{ request.user.profile_pic.url }}"
-class="w-32 h-32 rounded-full border-4 border-white object-cover shadow-lg">
-{% else %}
-<img src="https://i.pravatar.cc/150"
-class="w-32 h-32 rounded-full border-4 border-white shadow-lg">
-{% endif %}
+class="w-36 h-36 rounded-full object-cover border-4 border-gray-200">
 
-</div>
-
-
-<!-- NAME -->
-<div class="text-center mt-4">
+<div>
 
 <h2 class="text-2xl font-bold">
 {{ request.user.first_name }} {{ request.user.last_name }}
 </h2>
 
 <p class="text-gray-500">
-@{{ request.user.username }}
+Senior HR Manager
 </p>
 
-<span class="inline-block mt-2 px-3 py-1 bg-blue-100 text-blue-600 text-sm rounded-full">
-{{ request.user.role|title }}
+<p class="text-sm text-gray-400">
+🏢 {{ request.user.recruiterprofile.company_name }}
+</p>
+
+<p class="text-sm text-gray-400">
+📍 Dhaka, Bangladesh
+</p>
+
+</div>
+
+</div>
+
+<!-- SEARCH -->
+<div class="w-96">
+
+<form method="GET" class="flex gap-2">
+
+<input
+type="text"
+name="q"
+value="{{ request.GET.q }}"
+placeholder="Search job title..."
+class="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+<button
+type="submit"
+class="search-btn text-white px-4 py-2 rounded-lg">
+Search
+</button>
+
+<a href="{% url 'profile' %}"
+class="clear-btn text-white px-4 py-2 rounded-lg flex items-center justify-center">
+Clear
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+<hr class="my-6">
+
+<!-- COMPANY OVERVIEW -->
+<h3 class="text-lg font-semibold mb-3">Company Overview</h3>
+
+<p class="text-gray-600 mb-6">
+Tech Solutions Ltd. is a fast-growing software company specializing in enterprise systems, mobile apps, and cloud services.
+</p>
+
+<!-- JOB POSTS -->
+<h3 class="text-lg font-semibold mb-4">Job Posts</h3>
+
+<div class="overflow-x-auto">
+
+<table class="w-full border text-center">
+
+<thead class="bg-gray-100">
+
+<tr>
+<th class="p-3 border">Serial ID</th>
+<th class="p-3 border">Job Title</th>
+<th class="p-3 border">Deadline</th>
+<th class="p-3 border">Applicants</th>
+<th class="p-3 border">Status</th>
+<th class="p-3 border">Actions</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for job in jobs %}
+
+<tr class="hover:bg-gray-50">
+
+<td class="p-3 border">{{ job.id }}</td>
+
+<td class="p-3 border font-medium">
+{{ job.job_title }}
+</td>
+
+<td class="p-3 border text-gray-500">
+{{ job.deadline }}
+</td>
+
+<td class="p-3 border">
+{{ job.applications.count }}
+</td>
+
+<td class="p-3 border">
+
+{% if job.deadline >= today %}
+<span class="text-green-600 font-semibold">
+Available
+</span>
+{% else %}
+<span class="text-red-500 font-semibold">
+Closed
+</span>
+{% endif %}
+
+</td>
+
+<td class="p-3 border space-x-2">
+
+<a href="#" class="text-blue-600 hover:underline">
+View
+</a>
+
+<a href="#" class="text-yellow-600 hover:underline">
+Edit
+</a>
+
+<a href="#" class="text-red-600 hover:underline">
+Delete
+</a>
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="6" class="text-center p-6">
+
+{% if request.GET.q %}
+
+<span class="text-green-600 font-semibold">
+"{{ request.GET.q }}"
 </span>
 
+<span class="text-red-500 font-semibold">
+No job found
+</span>
+
+{% else %}
+
+<span class="text-gray-500 font-semibold">
+No job posts yet
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
 </div>
 
 
-<!-- INFO GRID -->
-<div class="grid md:grid-cols-2 gap-6 p-10">
+<!-- BUTTON AREA -->
+<div class="flex justify-between mt-8">
 
-<!-- FIRST NAME -->
-<div class="bg-gray-100 p-4 rounded-lg">
-<p class="text-sm text-gray-500">First Name</p>
-<p class="font-semibold text-lg">{{ request.user.first_name }}</p>
+<a href="{% url 'edit_recruiter_profile' %}"
+class="edit-btn text-white px-5 py-2 rounded-lg">
+Edit Recruiter Profile
+</a>
+
+<a href="{% url 'change_password' %}"
+class="password-btn text-white px-5 py-2 rounded-lg">
+Edit Password
+</a>
+
+<a href="{% url 'create_new_jobs' %}"
+class="post-btn text-white px-5 py-2 rounded-lg">
+Post New Job
+</a>
+
+</div>
+
 </div>
 
 
-<!-- LAST NAME -->
-<div class="bg-gray-100 p-4 rounded-lg">
-<p class="text-sm text-gray-500">Last Name</p>
-<p class="font-semibold text-lg">{{ request.user.last_name }}</p>
+<style>
+
+/* SEARCH BUTTON */
+
+.search-btn{
+background:#2563eb;
+transition:0.3s;
+}
+
+.search-btn:hover{
+background:#22c55e;
+box-shadow:0 0 20px #22c55e,0 0 40px #22c55e;
+}
+
+/* CLEAR BUTTON */
+
+.clear-btn{
+background:#6b7280;
+transition:0.3s;
+}
+
+.clear-btn:hover{
+background:#22c55e;
+box-shadow:0 0 20px #22c55e,0 0 40px #22c55e;
+}
+
+/* POST JOB */
+
+.post-btn{
+background:#2563eb;
+transition:0.3s;
+}
+
+.post-btn:hover{
+background:#22c55e;
+box-shadow:0 0 20px #22c55e,0 0 40px #22c55e;
+}
+
+/* EDIT COMPANY PROFILE */
+
+.edit-btn{
+background:#2563eb;
+transition:0.3s;
+}
+
+.edit-btn:hover{
+background:#22c55e;
+box-shadow:0 0 20px #22c55e,0 0 40px #22c55e;
+}
+
+/* EDIT PASSWORD */
+
+.password-btn{
+background:#22c55e;
+transition:0.3s;
+}
+
+.password-btn:hover{
+background:#2563eb;
+box-shadow:0 0 20px #2563eb,0 0 40px #2563eb;
+}
+
+</style>
+
+
+<!-- ================= END RECRUITER ================= -->
+
+
+{% else %}
+
+<!-- ================= JOB SEEKER PROFILE ================= -->
+
+<div class="bg-white shadow-xl rounded-xl overflow-hidden">
+
+<div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-36"></div>
+
+<div class="flex flex-col items-center -mt-16">
+
+<img src="{{ request.user.profile_pic.url }}" class="w-32 h-32 rounded-full border-4 border-white object-cover">
+
+<h2 class="text-2xl font-bold mt-3">
+{{ request.user.first_name }} {{ request.user.last_name }}
+</h2>
+
+<p class="text-gray-500">@{{ request.user.username }}</p>
+
 </div>
 
+<div class="grid md:grid-cols-2 gap-6 p-8">
 
-<!-- USERNAME -->
-<div class="bg-gray-100 p-4 rounded-lg">
-<p class="text-sm text-gray-500">Username</p>
-<p class="font-semibold text-lg">{{ request.user.username }}</p>
-</div>
-
-
-<!-- EMAIL -->
 <div class="bg-gray-100 p-4 rounded-lg">
 <p class="text-sm text-gray-500">Email</p>
-<p class="font-semibold text-lg">{{ request.user.email }}</p>
+<p class="font-semibold">{{ request.user.email }}</p>
 </div>
 
-
-<!-- PHONE -->
 <div class="bg-gray-100 p-4 rounded-lg">
-<p class="text-sm text-gray-500">Phone Number</p>
-<p class="font-semibold text-lg">{{ request.user.phone }}</p>
+<p class="text-sm text-gray-500">Phone</p>
+<p class="font-semibold">{{ request.user.phone }}</p>
 </div>
 
-
-<!-- ROLE -->
 <div class="bg-gray-100 p-4 rounded-lg">
-<p class="text-sm text-gray-500">Role</p>
-<p class="font-semibold text-lg">{{ request.user.role|title }}</p>
+<p class="text-sm text-gray-500">Skills</p>
+<p class="font-semibold">{{ request.user.jobseekerprofile.skills }}</p>
+</div>
+
+<div class="bg-gray-100 p-4 rounded-lg">
+<p class="text-sm text-gray-500">Experience</p>
+<p class="font-semibold">{{ request.user.jobseekerprofile.experience }}</p>
 </div>
 
 </div>
 
+<div class="px-8 pb-8">
 
-<!-- ACTION BUTTONS -->
-<div class="flex justify-center gap-4 pb-10">
+<h3 class="text-lg font-semibold mb-2">Bio</h3>
 
-<a href="#"
-class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition shadow">
-
-Edit Profile
-
-</a>
-
-<a href="{% url 'logout' %}"
-class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition shadow">
-
-Logout
-
-</a>
+<p class="text-gray-600">
+{{ request.user.jobseekerprofile.bio }}
+</p>
 
 </div>
 
+</div>
+
+<!-- ================= END JOB SEEKER ================= -->
+
+{% endif %}
 
 </div>
+
+{% endif %}
 
 {% endblock %}

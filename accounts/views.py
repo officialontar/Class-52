@@ -5,6 +5,10 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
+
+import jobs
+from jobs.models import Job
 from .models import CustomUser, RecruiterProfile, JobSeekerProfile
 
 
@@ -153,6 +157,47 @@ def logout_view(request):
 
 
 @login_required
-def profile_page(request):
-    
-    return render(request, 'accounts/profile.html')
+def profile(request):
+
+    query = request.GET.get("q")
+
+    jobs = Job.objects.filter(recruiter=request.user.recruiterprofile)
+
+    if query:
+        jobs = jobs.filter(job_title__icontains=query)
+
+    context = {
+        "jobs": jobs,
+        "today": now().date()
+    }
+
+    return render(request, 'accounts/profile.html', context)
+
+
+
+
+@login_required
+def edit_recruiter_profile(request):
+
+    user = request.user
+    recruiter = request.user.recruiterprofile
+
+    if request.method == "POST":
+
+        user.first_name = request.POST.get("first_name")
+        user.last_name = request.POST.get("last_name")
+        user.email = request.POST.get("email")
+        user.phone = request.POST.get("phone")
+
+        if request.FILES.get("profile_pic"):
+            user.profile_pic = request.FILES.get("profile_pic")
+
+        recruiter.company_name = request.POST.get("company_name")
+        recruiter.company_website = request.POST.get("company_website")
+
+        user.save()
+        recruiter.save()
+
+        return redirect("profile")
+
+    return render(request,"accounts/edit_recruiter_profile.html")
